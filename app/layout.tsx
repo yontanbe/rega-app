@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/heebo";
-import Link from "next/link";
-import BottomNav from "@/components/BottomNav";
 import SwRegister from "@/components/SwRegister";
 import "./globals.css";
 
@@ -39,19 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="he" dir="rtl">
       <body>
-        <div className="shell">
-          <header className="topbar">
-            <Link href="/" className="brand" aria-label="רגע, לדף הבית">
-              <span className="brand-dot" aria-hidden />
-              רגע
-            </Link>
-            <Link href="/help/" className="help-link">
-              עזרה עכשיו
-            </Link>
-          </header>
-          <main className="content">{children}</main>
-          <BottomNav />
-        </div>
+        {children}
         <SwRegister />
       </body>
     </html>

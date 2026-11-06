@@ -24,7 +24,7 @@ export interface Settings {
   sound: boolean;
   haptics: boolean;
   voice: "f" | "m";
-  music: "none" | "flow" | "dawn" | "garden" | "night";
+  music: "none" | "ocean" | "tibetan" | "indian" | "mantra" | "flow" | "dawn" | "garden" | "night";
   musicVolume: number;
 }
 

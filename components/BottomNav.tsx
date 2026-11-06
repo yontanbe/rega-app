@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 const ITEMS = [
   {
-    href: "/",
+    href: "/app/",
     label: "בית",
     icon: <path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z" />,
   },
@@ -48,7 +48,7 @@ export default function BottomNav() {
     <nav className="bottom-nav" aria-label="ניווט ראשי">
       <ul>
         {ITEMS.map((item) => {
-          const active = item.href === "/" ? normalized === "/" : normalized.startsWith(item.href);
+          const active = normalized.startsWith(item.href);
           return (
             <li key={item.href}>
               <Link href={item.href} aria-current={active ? "page" : undefined}>

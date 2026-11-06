@@ -79,13 +79,19 @@ export default function TopicSession({ topicId }: { topicId: TopicId }) {
           <div className="music-grid" role="group" aria-label="מוזיקה">
             {MUSIC.map((m) => (
               <button key={m.id} className="music-opt" aria-pressed={music === m.id} onClick={() => setMusic(m.id)}>
-                <b>{m.name}</b>
-                <span>{m.description}</span>
+                <img src={asset(m.image)} alt="" loading="lazy" />
+                <span className="mo-text">
+                  <b>{m.name}</b>
+                  <span>{m.description}</span>
+                </span>
               </button>
             ))}
             <button className="music-opt" aria-pressed={music === "none"} onClick={() => setMusic("none")}>
-              <b>בלי מוזיקה</b>
-              <span>רק הקול והשקט</span>
+              <span className="mo-none" aria-hidden>∅</span>
+              <span className="mo-text">
+                <b>בלי מוזיקה</b>
+                <span>רק הקול והשקט</span>
+              </span>
             </button>
           </div>
         </div>

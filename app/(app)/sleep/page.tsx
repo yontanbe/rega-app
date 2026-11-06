@@ -140,18 +140,18 @@ export default function SleepPage() {
       </div>
 
       <div className="section-head">
-        <h2>מוזיקה מרגיעה</h2>
+        <h2>מוזיקה מרגיעה בלופ</h2>
       </div>
       <div className="music-grid">
         {MUSIC.map((m) => {
           const id = `music:${m.id}` as TrackId;
           return (
-            <button key={m.id} className="music-opt" aria-pressed={playing === id} onClick={() => play(id)}>
-              <b>
-                {playing === id ? "❚❚ " : "▶ "}
-                {m.name}
-              </b>
-              <span>{m.description}</span>
+            <button key={m.id} className="music-opt" aria-pressed={playing === id} onClick={() => play(id)} aria-label={`${playing === id ? "עצירת" : "ניגון"} ${m.name}`}>
+              <img src={asset(m.image)} alt="" loading="lazy" />
+              <span className="mo-text">
+                <b>{m.name}</b>
+                <span>{playing === id ? "מתנגן עכשיו" : m.description}</span>
+              </span>
             </button>
           );
         })}

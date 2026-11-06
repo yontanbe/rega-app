@@ -1,9 +1,11 @@
 // Offline support for Rega. Paths are relative to this file, so it works under any base path.
-const CACHE = "rega-v2";
+const CACHE = "rega-v3";
 const MEDIA_CACHE = "rega-media-v1"; // filled on demand by the "save offline" button and by plays
 const SHELL = [
   "./",
+  "./app/",
   "./meditate/",
+  "./meditate/manifest/",
   "./meditate/timer/",
   "./meditate/calm/",
   "./meditate/body/",
@@ -85,7 +87,7 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE).then((c) => c.put(req, copy));
           return res;
         })
-        .catch(() => caches.match(req).then((hit) => hit || caches.match("./"))),
+        .catch(() => caches.match(req).then((hit) => hit || caches.match("./app/"))),
     );
     return;
   }
