@@ -23,17 +23,27 @@ export interface MoodRecord {
 export interface Settings {
   sound: boolean;
   haptics: boolean;
+  voice: "f" | "m";
+  music: "none" | "flow" | "dawn" | "garden" | "night";
+  musicVolume: number;
+}
+
+export interface LastGuided {
+  topic: string;
+  minutes: number;
+  at: string; // ISO
 }
 
 export interface State {
   sessions: SessionRecord[];
   moods: MoodRecord[];
   settings: Settings;
+  lastGuided?: LastGuided;
 }
 
 const KEY = "rega:v1";
 const CHANGE_EVENT = "rega:store";
-const EMPTY: State = { sessions: [], moods: [], settings: { sound: true, haptics: true } };
+const EMPTY: State = { sessions: [], moods: [], settings: { sound: true, haptics: true, voice: "f", music: "flow", musicVolume: 0.5 } };
 
 let cache: State | null = null;
 
@@ -46,6 +56,7 @@ function read(): State {
       sessions: parsed.sessions ?? [],
       moods: parsed.moods ?? [],
       settings: { ...EMPTY.settings, ...parsed.settings },
+      lastGuided: parsed.lastGuided,
     };
   } catch {
     cache = EMPTY;
@@ -96,6 +107,11 @@ export function addSession(kind: SessionKind, title: string, seconds: number) {
 export function addMood(mood: MoodRecord["mood"]) {
   const s = read();
   write({ ...s, moods: [{ id: newId(), mood, at: new Date().toISOString() }, ...s.moods].slice(0, 500) });
+}
+
+export function setLastGuided(topic: string, minutes: number) {
+  const s = read();
+  write({ ...s, lastGuided: { topic, minutes, at: new Date().toISOString() } });
 }
 
 export function updateSettings(patch: Partial<Settings>) {

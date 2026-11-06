@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { BREATH_PATTERNS, formatClock, type BreathPattern } from "@/lib/content";
 import { keepScreenOn, playBell, playBreathCue, vibrate } from "@/lib/audio";
 import { addSession, updateSettings, useStore } from "@/lib/store";
+import { asset } from "@/lib/guided";
 
 const DURATIONS = [1, 3, 5, 10];
 
@@ -82,8 +83,13 @@ export default function BreathePage() {
 
   return (
     <>
-      <h1>נשימה</h1>
-      <p className="lead">{running ? pattern.description : "בחר/י תרגיל ומשך, ותני/תן לעיגול להוביל."}</p>
+      <section className="page-hero" style={{ minHeight: 170 }}>
+        <img src={asset("img/card-breathe.webp")} alt="" />
+        <div className="ph-copy">
+          <h1>נשימה</h1>
+        </div>
+      </section>
+      <p className="lead">{running ? pattern.description : "בחרו תרגיל ומשך, ותנו לעיגול להוביל."}</p>
 
       <div className="breath-stage">
         <div className="breath-orb-wrap">

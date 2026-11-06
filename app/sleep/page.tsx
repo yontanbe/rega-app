@@ -4,6 +4,18 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { formatClock, SOUNDSCAPES } from "@/lib/content";
 import { setMediaSession, soundscapeUrl, type SoundscapeId } from "@/lib/audio";
+import { asset, MUSIC, musicUrl, type MusicId } from "@/lib/guided";
+
+type TrackId = SoundscapeId | `music:${MusicId}`;
+
+function trackInfo(id: TrackId) {
+  if (id.startsWith("music:")) {
+    const m = MUSIC.find((x) => `music:${x.id}` === id)!;
+    return { name: m.name, url: musicUrl(m.id) };
+  }
+  const sc = SOUNDSCAPES.find((x) => x.id === id)!;
+  return { name: sc.name, url: soundscapeUrl(sc.id) };
+}
 import { addSession } from "@/lib/store";
 
 const TIMERS = [
@@ -15,7 +27,7 @@ const TIMERS = [
 const FADE_SECONDS = 30;
 
 export default function SleepPage() {
-  const [playing, setPlaying] = useState<SoundscapeId | null>(null);
+  const [playing, setPlaying] = useState<TrackId | null>(null);
   const [timer, setTimer] = useState(30);
   const [volume, setVolume] = useState(0.6);
   const [remaining, setRemaining] = useState<number | null>(null);
@@ -42,7 +54,7 @@ export default function SleepPage() {
 
   useEffect(() => () => audioRef.current?.pause(), []);
 
-  function play(id: SoundscapeId) {
+  function play(id: TrackId) {
     if (playing === id) {
       stop();
       return;
@@ -50,13 +62,13 @@ export default function SleepPage() {
     if (playing) logListening();
     if (!audioRef.current) audioRef.current = new Audio();
     const a = audioRef.current;
-    a.src = soundscapeUrl(id);
+    const info = trackInfo(id);
+    a.src = info.url;
     a.loop = true;
     a.volume = volume;
     void a.play().catch(() => {});
-    const scape = SOUNDSCAPES.find((s) => s.id === id)!;
-    titleRef.current = scape.name;
-    setMediaSession(scape.name, () => void a.play(), () => a.pause());
+    titleRef.current = info.name;
+    setMediaSession(info.name, () => void a.play(), () => a.pause());
     startedAtRef.current = Date.now();
     endsAtRef.current = timer > 0 ? Date.now() + timer * 60_000 : null;
     setRemaining(timer > 0 ? timer * 60 : null);
@@ -91,18 +103,29 @@ export default function SleepPage() {
 
   return (
     <>
-      <h1>שינה</h1>
-      <p className="lead">בוחרים צליל, מניחים את הטלפון, והוא ייכבה לבד. ממשיך לנגן גם כשהמסך כבוי.</p>
+      <section className="page-hero">
+        <img src={asset("img/hero-night.webp")} alt="" />
+        <div className="ph-copy">
+          <h1>שינה</h1>
+          <p>בוחרים צליל או מוזיקה, מניחים את הטלפון, והוא ייכבה לבד. ממשיך לנגן גם כשהמסך כבוי.</p>
+        </div>
+      </section>
 
+      <Link href="/meditate/sleep/?min=15" className="topic-row" style={{ marginBottom: 8 }}>
+        <img src={asset("img/topic-sleep.webp")} alt="" />
+        <div>
+          <b>מדיטציית הירדמות מודרכת</b>
+          <span>קול רך שמלווה אתכם לשינה, 5 עד 20 דקות, ומסתיים בשקט.</span>
+        </div>
+      </Link>
+
+      <div className="section-head">
+        <h2>צלילי טבע</h2>
+      </div>
       <div className="scape-grid">
         {SOUNDSCAPES.map((s) => (
-          <button
-            key={s.id}
-            className="scape"
-            aria-pressed={playing === s.id}
-            onClick={() => play(s.id)}
-            style={{ background: `linear-gradient(150deg, hsl(${s.hue} 45% 38%), hsl(${s.hue + 25} 50% 16%))` }}
-          >
+          <button key={s.id} className="scape" aria-pressed={playing === s.id} onClick={() => play(s.id)}>
+            <img src={asset(`img/sound-${s.id}.webp`)} alt="" loading="lazy" />
             <b>{s.name}</b>
             <span>{s.description}</span>
             {playing === s.id && (
@@ -114,6 +137,24 @@ export default function SleepPage() {
             )}
           </button>
         ))}
+      </div>
+
+      <div className="section-head">
+        <h2>מוזיקה מרגיעה</h2>
+      </div>
+      <div className="music-grid">
+        {MUSIC.map((m) => {
+          const id = `music:${m.id}` as TrackId;
+          return (
+            <button key={m.id} className="music-opt" aria-pressed={playing === id} onClick={() => play(id)}>
+              <b>
+                {playing === id ? "❚❚ " : "▶ "}
+                {m.name}
+              </b>
+              <span>{m.description}</span>
+            </button>
+          );
+        })}
       </div>
 
       <div className="card now-playing">

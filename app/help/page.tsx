@@ -14,7 +14,7 @@ export default function HelpPage() {
   return (
     <>
       <h1>עזרה עכשיו</h1>
-      <p className="lead">אם קשה לך מאוד, את/ה לא לבד. אפשר לדבר עם מישהו עכשיו, בחינם.</p>
+      <p className="lead">אם קשה לכם מאוד, אתם לא לבד. אפשר לדבר עם מישהו עכשיו, בחינם.</p>
 
       <div className="notice" style={{ marginBottom: 18 }}>
         אם יש סכנה מיידית לחיים, התקשרו ל-<a href="tel:101">101</a> או ל-<a href="tel:100">100</a>.
